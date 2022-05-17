@@ -4,6 +4,7 @@ import * as Joi from 'joi';
 export type Schema = {
   port: number;
   isDev: boolean;
+  isViewCached: boolean;
 };
 
 function load(): Schema {
@@ -12,6 +13,7 @@ function load(): Schema {
   return {
     port: Number(process.env.PORT),
     isDev: env === 0,
+    isViewCached: process.env.VIEW_CACHE === 'true' ? true : false,
   };
 }
 
@@ -20,11 +22,13 @@ const schema = Joi.object({
   ENVIRONMENT: Joi.string()
     .valid('development', 'production')
     .default('production'),
+  VIEW_CACHE: Joi.string().valid('true', 'false').default('false'),
 });
 
 export enum ConfigKeys {
   SERVER_PORT = 'port',
   IS_DEV = 'isDev',
+  IS_VIEW_CACHED = 'isViewCached',
 }
 
 export default ConfigModule.forRoot({
