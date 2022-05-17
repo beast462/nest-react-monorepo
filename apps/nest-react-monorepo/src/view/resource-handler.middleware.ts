@@ -34,7 +34,7 @@ export class ResourceHandlerMiddleware implements NestMiddleware {
     this.cacheEnabled = configService.get<boolean>(ConfigKeys.IS_VIEW_CACHED);
     this.availableFiles = new Set<string>();
 
-    this.scanAvailableFiles(viewDistributionDir);
+    if (this.cacheEnabled) this.scanAvailableFiles(viewDistributionDir);
   }
 
   private async scanAvailableFiles(root: string): Promise<void> {
@@ -49,9 +49,8 @@ export class ResourceHandlerMiddleware implements NestMiddleware {
     this.logger.log('All distribution files indexed');
   }
 
-  private async availablePath(path: string): Promise<boolean> {
-    if (!this.cacheEnabled)
-      return !existsSync(path) || !statSync(path).isFile();
+  private async isPathAvailable(path: string): Promise<boolean> {
+    if (!this.cacheEnabled) return existsSync(path) && statSync(path).isFile();
 
     return this.availableFiles.has(path);
   }
@@ -82,7 +81,7 @@ export class ResourceHandlerMiddleware implements NestMiddleware {
 
     const filePath = join(viewDistributionDir, path);
 
-    if (!(await this.availablePath(filePath)))
+    if (!(await this.isPathAvailable(filePath)))
       return this.loadFile(res.status(HttpStatus.OK), viewIndex);
 
     return this.loadFile(res.status(HttpStatus.OK), filePath);
