@@ -24,6 +24,7 @@
       "entryFile": "main",
       "sourceRoot": "apps/view/src",
       "compilerOptions": {
+        "webpackConfigPath": "apps/view/webpack.config.js",
         "tsConfigPath": "apps/view/tsconfig.app.json"
       }
     },

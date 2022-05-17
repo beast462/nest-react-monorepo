@@ -17,6 +17,8 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "jsx": "react-jsx",
+    "esModuleInterop": false,
     "paths": {
       "@/common": [
         "libs/common/src"
